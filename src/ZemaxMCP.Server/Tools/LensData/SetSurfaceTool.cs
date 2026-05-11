@@ -26,6 +26,7 @@ public class SetSurfaceTool
         [Description("Radius of curvature")] double? radius = null,
         [Description("Thickness to next surface")] double? thickness = null,
         [Description("Material/glass name")] string? material = null,
+        [Description("Coating name. Must match a coating defined in the currently-loaded coating file (e.g. \"AR\"). Use an empty string to remove the coating.")] string? coating = null,
         [Description("Semi-diameter")] double? semiDiameter = null,
         [Description("Conic constant")] double? conic = null,
         [Description("Surface comment")] string? comment = null,
@@ -44,6 +45,7 @@ public class SetSurfaceTool
                 ["radius"] = radius,
                 ["thickness"] = thickness,
                 ["material"] = material,
+                ["coating"] = coating,
                 ["semiDiameter"] = semiDiameter,
                 ["conic"] = conic,
                 ["comment"] = comment,
@@ -76,6 +78,9 @@ public class SetSurfaceTool
 
                 if (!string.IsNullOrEmpty(material))
                     surface.Material = material;
+
+                if (coating is not null)
+                    surface.Coating = coating;
 
                 if (semiDiameter.HasValue)
                     surface.SemiDiameter = semiDiameter.Value;
@@ -141,6 +146,7 @@ public class SetSurfaceTool
                         Radius = surface.Radius,
                         Thickness = surface.Thickness,
                         Material = surface.Material,
+                        Coating = surface.Coating,
                         SemiDiameter = surface.SemiDiameter,
                         Conic = surface.Conic,
                         SurfaceType = surface.Type.ToString(),
