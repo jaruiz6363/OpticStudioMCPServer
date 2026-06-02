@@ -13,6 +13,7 @@ An MCP (Model Context Protocol) server that enables AI assistants to interact wi
   - [Claude Code Setup](#claude-code-setup)
   - [Ollama Setup (Local LLMs)](#ollama-setup-local-llms)
 - [Connection Modes](#connection-modes)
+- [Non-Sequential (NSC) Mode](#non-sequential-nsc-mode)
 - [Tool Reference](#tool-reference)
   - [System Tools](#system-tools)
   - [Lens Data Tools](#lens-data-tools)
@@ -262,6 +263,37 @@ To use **Extension** mode:
 3. Tell the AI to connect in extension mode: *"Connect to OpticStudio in extension mode"*
 
 The AI defaults to **standalone** mode unless you explicitly request extension mode.
+
+---
+
+## Non-Sequential (NSC) Mode
+
+In addition to classic sequential ray tracing, the MCP server supports **non-sequential** simulation through the Non-sequential Component Editor (NCE). Non-sequential mode is used for problems where rays can hit objects in any order and may split, scatter, or reflect — such as illumination design, photometry, stray-light analysis, light pipes, and other non-imaging optics.
+
+The system operates in one of two modes:
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| **Sequential** (default) | Surfaces are traced in a fixed order (the Lens Data Editor) | Imaging systems: lenses, mirrors, MTF, spot size, optimization |
+| **Non-Sequential** | Objects are placed in 3D and rays propagate freely (the NCE) | Illumination, detectors, sources, stray light, non-imaging optics |
+
+Switch modes by telling the AI, e.g. *"Switch to non-sequential mode"*, which calls `zemax_set_system_mode`. Once in non-sequential mode you build the system from **objects** (sources, detectors, lenses, reflectors, etc.) rather than surfaces, run a non-sequential ray trace, and read results back from detector objects.
+
+To discover the exact object type names available in your OpticStudio installation, ask the AI to list them (`zemax_nsc_list_object_types`) and use the returned names verbatim when adding objects.
+
+A typical non-sequential interaction with the AI assistant looks like:
+
+1. **Connect**: *"Connect to OpticStudio"* (uses standalone mode by default)
+2. **Switch mode**: *"Switch to non-sequential mode"*
+3. **Discover types**: *"List the available source and detector object types"*
+4. **Add a source**: *"Add a Source Point at z = 0"*
+5. **Add a detector**: *"Add a Detector Rectangle 50mm downstream"*
+6. **Configure**: *"Set the source to 1,000,000 analysis rays"*
+7. **Trace**: *"Run a non-sequential ray trace with 4 cores"*
+8. **Read results**: *"Show me the total flux and irradiance on the detector"*
+9. **Save**: *"Save the file"*
+
+See the [Non-Sequential Tools](#non-sequential-tools) table below for the full list of available tools and their parameters.
 
 ---
 
