@@ -22,6 +22,7 @@ An MCP (Model Context Protocol) server that enables AI assistants to interact wi
   - [Configuration Tools](#configuration-tools)
   - [System Settings Tools](#system-settings-tools)
   - [Glass Catalog Tools](#glass-catalog-tools)
+  - [Non-Sequential Tools](#non-sequential-tools)
 - [Resources](#resources)
 - [Prompts](#prompts)
 - [Example Workflow](#example-workflow)
@@ -412,6 +413,22 @@ Launches a non-blocking multistart search that returns immediately. Each trial r
 | `zemax_get_glasses` | List glasses with properties (Nd, Vd, dPgF, etc.) | `catalogs` (**required**): Comma-separated catalog names, e.g. `"SCHOTT,OHARA"` |
 | `zemax_filter_glasses` | Filter glasses by criteria | `catalogs` (**required**) · `preferredOnly` (opt) · `ndMin`/`ndMax` (opt) · `vdMin`/`vdMax` (opt) · `dpgfMin`/`dpgfMax` (opt) · `maxCost` (opt) · `tceMin`/`tceMax` (opt) · `distanceRadius` (opt): Max weighted distance from target · `ndTarget`/`vdTarget`/`dpgfTarget` (opt) · `wn`/`wa`/`wp` (opt): Weights for distance calc |
 | `zemax_export_glass_catalog` | Export filtered glasses to a new .agf file | `catalogName` (**required**) · `sourceCatalogs` (**required**) · `overwrite` (opt, default: `false`) · Plus all filter params from `zemax_filter_glasses` |
+
+### Non-Sequential Tools
+
+Tools for building and simulating non-sequential systems via the Non-sequential Component Editor (NCE) — illumination, photometry, stray light, and non-imaging optics. Switch the system to non-sequential mode first with `zemax_set_system_mode`.
+
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `zemax_set_system_mode` | Switch between sequential and non-sequential mode, or report the current mode | `mode` (opt): `"sequential"` or `"nonsequential"`. Omit to just report the current mode |
+| `zemax_nsc_list_object_types` | List object type names available in this installation (use the names verbatim in `zemax_nsc_add_object`) | `filter` (opt, default: `"all"`): `"all"`, `"sources"`, `"detectors"`, or `"objects"` |
+| `zemax_nsc_get_objects` | List all NCE objects with type, comment, position, tilt, material, and reference links | *none* |
+| `zemax_nsc_get_object` | Get one object's full detail, including type-specific parameter columns (Par1..ParN) paired with their labels | `objectNumber` (**required**, 1-based) |
+| `zemax_nsc_add_object` | Add an object and set its type | `objectType` (**required**): e.g. `"Source Point"`, `"Detector Rectangle"` · `insertAt` (opt, default: `0` = append) · `x`/`y`/`z` (opt) · `material` (opt) · `comment` (opt) |
+| `zemax_nsc_set_object` | Modify an object's position, tilt, material, comment, references, and parameter columns | `objectNumber` (**required**) · `x`/`y`/`z` (opt) · `tiltX`/`tiltY`/`tiltZ` (opt) · `material` (opt) · `comment` (opt) · `refObject`/`insideOf` (opt) · `parameters` (opt): list of `{ index, value }` or `{ index, text }` |
+| `zemax_nsc_remove_object` | Remove an object from the NCE | `objectNumber` (**required**, 1-based) |
+| `zemax_nsc_ray_trace` | Run a non-sequential ray trace (blocks until complete) | `splitRays` (opt, default: `false`) · `scatterRays` (opt, default: `false`) · `usePolarization` (opt, default: `false`) · `ignoreErrors` (opt, default: `true`) · `clearDetectors` (opt, default: `true`) · `cores` (opt, default: `0` = auto) |
+| `zemax_nsc_get_detector_data` | Read detector results after a trace (total flux + per-pixel stats, optional grid) | `objectNumber` (**required**) · `dataType` (opt, default: `0`): `0`=flux/pixel, `1`=irradiance, `2`=intensity · `includeGrid` (opt, default: `false`) · `maxGridPixels` (opt, default: `4096`) |
 
 ---
 
