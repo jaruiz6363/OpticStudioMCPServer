@@ -109,6 +109,16 @@ If you prefer, create `ZemaxPaths.props` in the repository root manually:
 
 Replace the path with your actual OpticStudio installation directory (include trailing backslash).
 
+### Building distributable .exe file
+
+To build a distributable .exe file using Costura that packs all of the .dll files (except OpticStudio's and .NET itself) into the .exe for easy distribution, build in release mode (after generating `ZemaxPaths.props`):
+
+```powershell
+dotnet build -c Release
+```
+
+The file `src/ZemaxMCP.Server/bin/Release/net48/ZemaxMCP.Server.exe` will run as-is on any machine with OpticStudio and .NET installed.
+
 ---
 
 ## Step 3: Configure Your AI Client

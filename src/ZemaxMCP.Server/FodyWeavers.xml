@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <!--
+    Costura embeds all managed dependency DLLs in the output folder as resources
+    inside ZemaxMCP.Server.exe and resolves them at startup via AppDomain hooks.
+
+    ZOSAPI.dll / ZOSAPI_Interfaces.dll / ZOSAPI_NetHelper.dll are referenced with
+    <Private>false</Private> in the .csproj, so they are NOT in the output folder
+    and will NOT be embedded — they continue to be loaded at runtime from the
+    user's Zemax install via ZOSAPI_NetHelper.ZOSAPI_Initializer.Initialize().
+
+    IncludeDebugSymbols="false" keeps the embedded payload smaller for distribution.
+  -->
+  <Costura IncludeDebugSymbols="false" />
+</Weavers>

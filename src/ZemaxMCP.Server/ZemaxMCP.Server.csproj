@@ -14,6 +14,14 @@
     <PackageReference Include="Serilog.Sinks.File" />
   </ItemGroup>
 
+  <!-- Costura.Fody embeds managed dependencies into ZemaxMCP.Server.exe so the
+       Release build produces a single distributable binary. Fody/Costura are
+       build-time only (PrivateAssets="all") — they don't ship as runtime deps. -->
+  <ItemGroup>
+    <PackageReference Include="Fody" PrivateAssets="all" />
+    <PackageReference Include="Costura.Fody" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ZemaxMCP.Core\ZemaxMCP.Core.csproj" />
     <ProjectReference Include="..\ZemaxMCP.Documentation\ZemaxMCP.Documentation.csproj" />
