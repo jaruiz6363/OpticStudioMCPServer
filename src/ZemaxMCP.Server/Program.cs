@@ -137,6 +137,7 @@ try
     .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.GetGlassesTool>()
     .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.FilterGlassesTool>()
     .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.ExportGlassCatalogTool>()
+    .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.AddMaterialCatalogTool>()
     // Resources
     .WithResources<ZemaxMCP.Server.Resources.CurrentSystemResource>()
     .WithResources<ZemaxMCP.Server.Resources.MeritFunctionResource>()

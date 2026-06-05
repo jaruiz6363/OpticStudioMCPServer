@@ -412,6 +412,7 @@ Launches a non-blocking multistart search that returns immediately. Each trial r
 | `zemax_get_glasses` | List glasses with properties (Nd, Vd, dPgF, etc.) | `catalogs` (**required**): Comma-separated catalog names, e.g. `"SCHOTT,OHARA"` |
 | `zemax_filter_glasses` | Filter glasses by criteria | `catalogs` (**required**) · `preferredOnly` (opt) · `ndMin`/`ndMax` (opt) · `vdMin`/`vdMax` (opt) · `dpgfMin`/`dpgfMax` (opt) · `maxCost` (opt) · `tceMin`/`tceMax` (opt) · `distanceRadius` (opt): Max weighted distance from target · `ndTarget`/`vdTarget`/`dpgfTarget` (opt) · `wn`/`wa`/`wp` (opt): Weights for distance calc |
 | `zemax_export_glass_catalog` | Export filtered glasses to a new .agf file | `catalogName` (**required**) · `sourceCatalogs` (**required**) · `overwrite` (opt, default: `false`) · Plus all filter params from `zemax_filter_glasses` |
+| `zemax_add_material_catalog` | Add a glass/material catalog to the current project's list of catalogs in use (System Explorer > Material Catalogs) | `catalogName` (**required**) |
 
 ---
 
