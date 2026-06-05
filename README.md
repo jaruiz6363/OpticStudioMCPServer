@@ -285,7 +285,7 @@ The AI defaults to **standalone** mode unless you explicitly request extension m
 |------|-------------|------------|
 | `zemax_get_system` | Get system data (surfaces, fields, wavelengths) | `includeSurfaces` (opt, default: `true`) · `includeFields` (opt, default: `true`) · `includeWavelengths` (opt, default: `true`) |
 | `zemax_get_surface` | Get detailed data for a surface | `surfaceNumber` (**required**): Surface number (0=object, -1=image) |
-| `zemax_set_surface` | Modify surface properties | `surfaceNumber` (**required**) · `radius` (opt) · `thickness` (opt) · `material` (opt) · `semiDiameter` (opt) · `conic` (opt) · `comment` (opt) · `isStop` (opt) · `radiusVariable` (opt) · `thicknessVariable` (opt) · `conicVariable` (opt) |
+| `zemax_set_surface` | Modify surface properties | `surfaceNumber` (**required**) · `radius` (opt) · `thickness` (opt) · `material` (opt) · `semiDiameter` (opt) · `conic` (opt) · `comment` (opt) · `isStop` (opt) · `radiusVariable` (opt) · `thicknessVariable` (opt) · `conicVariable` (opt) · `coating` (opt) |
 | `zemax_add_surface` | Add a new surface | `insertAt` (opt, default: `0` = before image) · `radius` (opt) · `thickness` (opt) · `material` (opt) · `comment` (opt) |
 | `zemax_get_aspheric_surface` | Get aspheric surface data with Even Asphere coefficients | `surfaceNumber` (**required**) |
 | `zemax_set_aspheric_surface` | Set Even Asphere coefficients | `surfaceNumber` (**required**) · `conic` (opt) · `conicVariable` (opt) · `alpha1`-`alpha8` (opt): Coefficients · `alpha1Variable`-`alpha8Variable` (opt) |
