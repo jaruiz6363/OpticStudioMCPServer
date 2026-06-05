@@ -83,6 +83,7 @@ try
     .WithTools<ZemaxMCP.Server.Tools.Analysis.GeometricEncircledEnergyTool>()
     .WithTools<ZemaxMCP.Server.Tools.Analysis.GeometricMtfVsFieldTool>()
     .WithTools<ZemaxMCP.Server.Tools.Analysis.RelativeIlluminationTool>()
+    .WithTools<ZemaxMCP.Server.Tools.Analysis.CrossSectionLayoutTool>()
     // Optimization Tools
     .WithTools<ZemaxMCP.Server.Tools.Optimization.GetMeritFunctionTool>()
     .WithTools<ZemaxMCP.Server.Tools.Optimization.AddOperandTool>()
