@@ -29,7 +29,6 @@ public static class McpServerExtensions
         .WithTools<RayTraceTool>()
         .WithTools<RmsSpotTool>()
         .WithTools<CardinalPointsTool>()
-        .WithTools<CrossSectionLayoutTool>()
 
         // Optimization Tools
         .WithTools<GetMeritFunctionTool>()

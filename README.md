@@ -328,7 +328,6 @@ The AI defaults to **standalone** mode unless you explicitly request extension m
 | `zemax_relative_illumination` | Relative illumination vs. field angle | *none* |
 | `zemax_diffraction_encircled_energy` | FFT diffraction encircled energy | `sampling` (opt, default: `3`) · `useDashes` (opt, default: `false`) |
 | `zemax_geometric_encircled_energy` | Geometric encircled energy (ray-based) | `sampling` (opt, default: `4`) · `showDiffractionLimit` (opt, default: `true`) · `scaleByDiffractionLimit` (opt, default: `false`) · `scatterRays` (opt, default: `false`) · `useDashes` (opt, default: `false`) |
-| `zemax_cross_section_layout` | Export the 2D cross-section layout of the lens as a PNG image | `outputPath` (opt): Absolute path for the output PNG; defaults to `cross_section_<timestamp>.png` in the directory of the currently open lens file (falls back to `%TEMP%\ZemaxMCP` if no file is open) · `pixelWidth` (opt, default: `1200`) · `pixelHeight` (opt, default: `800`) · `numberOfRays` (opt, default: `5`): Rays per field; `0` for marginal and chief only · `startSurface` (opt, default: `-1` = OpticStudio default) · `endSurface` (opt, default: `-1` = OpticStudio default) · `field` (opt, default: `0` = all fields) · `wavelength` (opt, default: `0` = all wavelengths) · `configuration` (opt, default: `0` = current) · `yStretch` (opt, default: `1.0`) · `deleteVignetted` (opt, default: `false`) · `colorRaysBy` (opt, default: `"Fields"`): `Fields`, `Waves`, or `Wavelength` |
 
 ### Optimization Tools
 
