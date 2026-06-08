@@ -53,16 +53,25 @@ public class NscAddObjectTool
                     ? nce.InsertNewObjectAt(insertAt)
                     : nce.AddObject();
 
-                // Resolve and apply the object type.
-                var objType = nce.ObjectTypeFromObjectName(objectType);
-                var settings = row.GetObjectTypeSettings(objType);
-                if (!settings.IsValid)
-                    throw new ArgumentException(
-                        $"Unknown or unavailable object type '{objectType}'. " +
-                        "Use zemax_nsc_list_object_types to see valid names.");
+                // Resolve and apply the object type. If anything fails, remove the row we just
+                // added so a failed call doesn't leave a stray empty object behind.
+                try
+                {
+                    var objType = nce.ObjectTypeFromObjectName(objectType);
+                    var settings = row.GetObjectTypeSettings(objType);
+                    if (!settings.IsValid)
+                        throw new ArgumentException(
+                            $"Unknown or unavailable object type '{objectType}'. " +
+                            "Use zemax_nsc_list_object_types to see valid names.");
 
-                if (!row.ChangeType(settings))
-                    throw new InvalidOperationException($"Failed to set object type to '{objectType}'.");
+                    if (!row.ChangeType(settings))
+                        throw new InvalidOperationException($"Failed to set object type to '{objectType}'.");
+                }
+                catch
+                {
+                    nce.RemoveObjectAt(row.ObjectNumber);
+                    throw;
+                }
 
                 // Apply common properties after the type change (ChangeType can reset the row).
                 row.XPosition = x;

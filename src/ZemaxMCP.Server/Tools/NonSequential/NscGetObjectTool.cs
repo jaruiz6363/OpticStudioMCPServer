@@ -52,19 +52,7 @@ public class NscGetObjectTool
 
                 var row = nce.GetObjectAt(objectNumber);
 
-                var labels = row.AvailableParameters() ?? Array.Empty<string>();
-                var paramList = new List<NscParameterInfo>();
-                for (int p = 0; p < labels.Length; p++)
-                {
-                    var col = (ObjectColumn)((int)ObjectColumn.Par1 + p);
-                    var cell = row.GetObjectCell(col);
-                    paramList.Add(new NscParameterInfo(
-                        Index: p + 1,
-                        Label: labels[p] ?? $"Par{p + 1}",
-                        Value: cell.Value ?? "",
-                        NumericValue: cell.DoubleValue
-                    ));
-                }
+                var paramList = NscCellHelper.ReadParameters(row);
 
                 return new NscGetObjectResult(
                     Success: true,

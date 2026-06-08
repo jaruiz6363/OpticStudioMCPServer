@@ -74,7 +74,7 @@ public class NscSetObjectTool
 
                 if (parameters != null)
                 {
-                    int paramCount = (row.AvailableParameters() ?? Array.Empty<string>()).Length;
+                    int paramCount = NscCellHelper.ParameterCount(row);
                     foreach (var p in parameters)
                     {
                         if (p.Index < 1 || p.Index > paramCount)
@@ -84,7 +84,7 @@ public class NscSetObjectTool
                         var col = (ObjectColumn)((int)ObjectColumn.Par1 + (p.Index - 1));
                         var cell = row.GetObjectCell(col);
                         if (p.Value.HasValue)
-                            cell.DoubleValue = p.Value.Value;
+                            NscCellHelper.WriteNumeric(cell, p.Value.Value);
                         else if (p.Text != null)
                             cell.Value = p.Text;
                         else
@@ -92,6 +92,12 @@ public class NscSetObjectTool
                                 $"Parameter index {p.Index} has neither a numeric 'value' nor a 'text' value.");
                     }
                 }
+
+                // Read-back is best-effort and must not mask a successful mutation:
+                // the edits above have already been applied at this point.
+                List<NscParameterInfo>? readBack = null;
+                try { readBack = NscCellHelper.ReadParameters(row); }
+                catch { /* leave readBack null; the set itself succeeded */ }
 
                 return new NscSetObjectResult(
                     Success: true,
@@ -101,7 +107,7 @@ public class NscSetObjectTool
                         row.XPosition, row.YPosition, row.ZPosition,
                         row.TiltAboutX, row.TiltAboutY, row.TiltAboutZ,
                         row.Material ?? "", row.RefObject, row.InsideOf),
-                    Parameters: ReadParameters(row)
+                    Parameters: readBack
                 );
             });
         }
@@ -109,18 +115,5 @@ public class NscSetObjectTool
         {
             return new NscSetObjectResult(false, ex.Message, null, null);
         }
-    }
-
-    private static List<NscParameterInfo> ReadParameters(INCERow row)
-    {
-        var labels = row.AvailableParameters() ?? Array.Empty<string>();
-        var list = new List<NscParameterInfo>();
-        for (int p = 0; p < labels.Length; p++)
-        {
-            var col = (ObjectColumn)((int)ObjectColumn.Par1 + p);
-            var cell = row.GetObjectCell(col);
-            list.Add(new NscParameterInfo(p + 1, labels[p] ?? $"Par{p + 1}", cell.Value ?? "", cell.DoubleValue));
-        }
-        return list;
     }
 }

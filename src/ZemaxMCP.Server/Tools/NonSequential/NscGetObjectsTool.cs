@@ -15,6 +15,7 @@ public class NscGetObjectsTool
     public record NscGetObjectsResult(
         bool Success,
         string? Error,
+        string? Warning,
         string Mode,
         int NumberOfObjects,
         List<NscObjectSummary> Objects
@@ -55,7 +56,8 @@ public class NscGetObjectsTool
 
                 return new NscGetObjectsResult(
                     Success: true,
-                    Error: mode == SystemType.NonSequential
+                    Error: null,
+                    Warning: mode == SystemType.NonSequential
                         ? null
                         : "System is in sequential mode; the NCE may be empty. Switch with zemax_set_system_mode.",
                     Mode: mode.ToString(),
@@ -66,7 +68,7 @@ public class NscGetObjectsTool
         }
         catch (Exception ex)
         {
-            return new NscGetObjectsResult(false, ex.Message, "Unknown", 0, new List<NscObjectSummary>());
+            return new NscGetObjectsResult(false, ex.Message, null, "Unknown", 0, new List<NscObjectSummary>());
         }
     }
 }
