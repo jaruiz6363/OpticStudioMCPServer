@@ -138,6 +138,16 @@ try
     .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.FilterGlassesTool>()
     .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.ExportGlassCatalogTool>()
     .WithTools<ZemaxMCP.Server.Tools.GlassCatalog.AddMaterialCatalogTool>()
+    // Non-Sequential Tools
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.SetSystemModeTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscListObjectTypesTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscGetObjectsTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscGetObjectTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscAddObjectTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscSetObjectTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscRemoveObjectTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscRayTraceTool>()
+    .WithTools<ZemaxMCP.Server.Tools.NonSequential.NscGetDetectorDataTool>()
     // Resources
     .WithResources<ZemaxMCP.Server.Resources.CurrentSystemResource>()
     .WithResources<ZemaxMCP.Server.Resources.MeritFunctionResource>()

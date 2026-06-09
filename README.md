@@ -13,6 +13,7 @@ An MCP (Model Context Protocol) server that enables AI assistants to interact wi
   - [Claude Code Setup](#claude-code-setup)
   - [Ollama Setup (Local LLMs)](#ollama-setup-local-llms)
 - [Connection Modes](#connection-modes)
+- [Non-Sequential (NSC) Mode](#non-sequential-nsc-mode)
 - [Tool Reference](#tool-reference)
   - [System Tools](#system-tools)
   - [Lens Data Tools](#lens-data-tools)
@@ -22,6 +23,7 @@ An MCP (Model Context Protocol) server that enables AI assistants to interact wi
   - [Configuration Tools](#configuration-tools)
   - [System Settings Tools](#system-settings-tools)
   - [Glass Catalog Tools](#glass-catalog-tools)
+  - [Non-Sequential Tools](#non-sequential-tools)
 - [Resources](#resources)
 - [Prompts](#prompts)
 - [Example Workflow](#example-workflow)
@@ -275,6 +277,37 @@ The AI defaults to **standalone** mode unless you explicitly request extension m
 
 ---
 
+## Non-Sequential (NSC) Mode
+
+In addition to classic sequential ray tracing, the MCP server supports **non-sequential** simulation through the Non-sequential Component Editor (NCE). Non-sequential mode is used for problems where rays can hit objects in any order and may split, scatter, or reflect — such as illumination design, photometry, stray-light analysis, light pipes, and other non-imaging optics.
+
+The system operates in one of two modes:
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| **Sequential** (default) | Surfaces are traced in a fixed order (the Lens Data Editor) | Imaging systems: lenses, mirrors, MTF, spot size, optimization |
+| **Non-Sequential** | Objects are placed in 3D and rays propagate freely (the NCE) | Illumination, detectors, sources, stray light, non-imaging optics |
+
+Switch modes by telling the AI, e.g. *"Switch to non-sequential mode"*, which calls `zemax_set_system_mode`. Once in non-sequential mode you build the system from **objects** (sources, detectors, lenses, reflectors, etc.) rather than surfaces, run a non-sequential ray trace, and read results back from detector objects.
+
+To discover the exact object type names available in your OpticStudio installation, ask the AI to list them (`zemax_nsc_list_object_types`) and use the returned names verbatim when adding objects.
+
+A typical non-sequential interaction with the AI assistant looks like:
+
+1. **Connect**: *"Connect to OpticStudio"* (uses standalone mode by default)
+2. **Switch mode**: *"Switch to non-sequential mode"*
+3. **Discover types**: *"List the available source and detector object types"*
+4. **Add a source**: *"Add a Source Point at z = 0"*
+5. **Add a detector**: *"Add a Detector Rectangle 50mm downstream"*
+6. **Configure**: *"Set the source to 1,000,000 analysis rays"*
+7. **Trace**: *"Run a non-sequential ray trace with 4 cores"*
+8. **Read results**: *"Show me the total flux and irradiance on the detector"*
+9. **Save**: *"Save the file"*
+
+See the [Non-Sequential Tools](#non-sequential-tools) table below for the full list of available tools and their parameters.
+
+---
+
 ## Tool Reference
 
 ### System Tools
@@ -423,6 +456,22 @@ Launches a non-blocking multistart search that returns immediately. Each trial r
 | `zemax_filter_glasses` | Filter glasses by criteria | `catalogs` (**required**) · `preferredOnly` (opt) · `ndMin`/`ndMax` (opt) · `vdMin`/`vdMax` (opt) · `dpgfMin`/`dpgfMax` (opt) · `maxCost` (opt) · `tceMin`/`tceMax` (opt) · `distanceRadius` (opt): Max weighted distance from target · `ndTarget`/`vdTarget`/`dpgfTarget` (opt) · `wn`/`wa`/`wp` (opt): Weights for distance calc |
 | `zemax_export_glass_catalog` | Export filtered glasses to a new .agf file | `catalogName` (**required**) · `sourceCatalogs` (**required**) · `overwrite` (opt, default: `false`) · Plus all filter params from `zemax_filter_glasses` |
 | `zemax_add_material_catalog` | Add a glass/material catalog to the current project's list of catalogs in use (System Explorer > Material Catalogs) | `catalogName` (**required**) |
+
+### Non-Sequential Tools
+
+Tools for building and simulating non-sequential systems via the Non-sequential Component Editor (NCE) — illumination, photometry, stray light, and non-imaging optics. Switch the system to non-sequential mode first with `zemax_set_system_mode`.
+
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `zemax_set_system_mode` | Switch between sequential and non-sequential mode, or report the current mode | `mode` (opt): `"sequential"` or `"nonsequential"`. Omit to just report the current mode |
+| `zemax_nsc_list_object_types` | List object type names available in this installation (use the names verbatim in `zemax_nsc_add_object`) | `filter` (opt, default: `"all"`): `"all"`, `"sources"`, `"detectors"`, or `"objects"` |
+| `zemax_nsc_get_objects` | List all NCE objects with type, comment, position, tilt, material, and reference links | *none* |
+| `zemax_nsc_get_object` | Get one object's full detail, including type-specific parameter columns (Par1..ParN) paired with their labels | `objectNumber` (**required**, 1-based) |
+| `zemax_nsc_add_object` | Add an object and set its type | `objectType` (**required**): e.g. `"Source Point"`, `"Detector Rectangle"` · `insertAt` (opt, default: `0` = append) · `x`/`y`/`z` (opt) · `material` (opt) · `comment` (opt) |
+| `zemax_nsc_set_object` | Modify an object's position, tilt, material, comment, references, and parameter columns | `objectNumber` (**required**) · `x`/`y`/`z` (opt) · `tiltX`/`tiltY`/`tiltZ` (opt) · `material` (opt) · `comment` (opt) · `refObject`/`insideOf` (opt) · `parameters` (opt): list of `{ index, value }` or `{ index, text }` |
+| `zemax_nsc_remove_object` | Remove an object from the NCE | `objectNumber` (**required**, 1-based) |
+| `zemax_nsc_ray_trace` | Run a non-sequential ray trace (blocks until complete) | `splitRays` (opt, default: `false`) · `scatterRays` (opt, default: `false`) · `usePolarization` (opt, default: `false`) · `ignoreErrors` (opt, default: `true`) · `clearDetectors` (opt, default: `true`) · `cores` (opt, default: `0` = auto) |
+| `zemax_nsc_get_detector_data` | Read detector results after a trace (total flux + per-pixel stats, optional grid) | `objectNumber` (**required**) · `dataType` (opt, default: `0`): `0`=flux/pixel, `1`=irradiance, `2`=intensity · `includeGrid` (opt, default: `false`) · `maxGridPixels` (opt, default: `4096`) |
 
 ---
 
