@@ -26,5 +26,9 @@
     <!-- JSON -->
     <PackageVersion Include="System.Text.Json" Version="8.0.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+
+    <!-- Single-file packaging (bundles managed dependencies into the server .exe) -->
+    <PackageVersion Include="Fody" Version="6.8.0" />
+    <PackageVersion Include="Costura.Fody" Version="5.7.0" />
   </ItemGroup>
 </Project>

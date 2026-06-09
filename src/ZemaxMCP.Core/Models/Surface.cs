@@ -7,6 +7,7 @@ public record Surface
     public double Radius { get; init; }
     public double Thickness { get; init; }
     public string? Material { get; init; }
+    public string? Coating { get; init; }
     public double SemiDiameter { get; init; }
     public double Conic { get; init; }
     public string SurfaceType { get; init; } = "Standard";

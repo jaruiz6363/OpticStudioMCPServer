@@ -49,3 +49,6 @@ logs/
 
 # Machine-specific build configuration
 ZemaxPaths.props
+
+.tmp
+.claude
