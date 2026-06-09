@@ -49,27 +49,42 @@ public class NscAddObjectTool
             {
                 var nce = system.NCE;
 
-                INCERow row = (insertAt > 0 && insertAt <= nce.NumberOfObjects)
-                    ? nce.InsertNewObjectAt(insertAt)
-                    : nce.AddObject();
+                // Capture the new row's index now, while it's still reliable: an append lands at
+                // NumberOfObjects, an insert at insertAt. After a failed ChangeType, row.ObjectNumber
+                // can no longer be trusted, so we must not rely on it for rollback.
+                INCERow row;
+                int newObjectNumber;
+                if (insertAt > 0 && insertAt <= nce.NumberOfObjects)
+                {
+                    row = nce.InsertNewObjectAt(insertAt);
+                    newObjectNumber = insertAt;
+                }
+                else
+                {
+                    row = nce.AddObject();
+                    newObjectNumber = nce.NumberOfObjects;   // appended last
+                }
 
                 // Resolve and apply the object type. If anything fails, remove the row we just
-                // added so a failed call doesn't leave a stray empty object behind.
+                // added (using the reliable index) so a failed call doesn't strand a stray object.
                 try
                 {
                     var objType = nce.ObjectTypeFromObjectName(objectType);
                     var settings = row.GetObjectTypeSettings(objType);
-                    if (!settings.IsValid)
+                    if (!settings.IsValid || !row.ChangeType(settings))
                         throw new ArgumentException(
                             $"Unknown or unavailable object type '{objectType}'. " +
                             "Use zemax_nsc_list_object_types to see valid names.");
-
-                    if (!row.ChangeType(settings))
-                        throw new InvalidOperationException($"Failed to set object type to '{objectType}'.");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    nce.RemoveObjectAt(row.ObjectNumber);
+                    nce.RemoveObjectAt(newObjectNumber);
+                    // ObjectTypeFromObjectName throws NotImplementedException for an unknown name;
+                    // translate it into the actionable message instead of leaking the COM error.
+                    if (ex is NotImplementedException)
+                        throw new ArgumentException(
+                            $"Unknown or unavailable object type '{objectType}'. " +
+                            "Use zemax_nsc_list_object_types to see valid names.");
                     throw;
                 }
 
