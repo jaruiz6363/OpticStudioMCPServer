@@ -351,6 +351,7 @@ See the [Non-Sequential Tools](#non-sequential-tools) table below for the full l
 | `zemax_rms_spot` | Calculate RMS spot size | `hx`, `hy` (opt, default: `0`) · `wavelength` (opt, default: `0`) · `reference` (opt, default: `"centroid"`): `centroid` or `chief` · `sampling` (opt, default: `4`) · `useGrid` (opt, default: `false`) |
 | `zemax_cardinal_points` | Get focal lengths, principal planes, etc. | `wavelength` (opt, default: `1`) |
 | `zemax_seidel_coefficients` | Get 3rd-order Seidel aberration coefficients | `wavelength` (opt, default: `0` = primary) |
+| `zemax_zernike_coefficients` | Compute Zernike wavefront coefficients (waves) plus summary metrics (RMS, P-V, Strehl, fit error) | `type` (**required**): `standard` (OSA/ANSI), `annular` (orthonormal over annulus), or `fringe` (U. Arizona) · `field` (opt, default: `1`) · `wavelength` (opt, default: `0` = primary) · `maxTerms` (opt, default: `0` = OpticStudio default) · `sampling` (opt, default: `3`, range 1-6: 32, 64, 128, 256, 512, 1024) · `obscuration` (opt, default: `0.0`, used by `annular` only) · `surface` (opt, default: `0` = image) |
 | `zemax_ray_fan` | Transverse ray aberration fan for all fields/wavelengths | *none* |
 | `zemax_opd_fan` | Optical path difference fan for all fields/wavelengths | *none* |
 | `zemax_pupil_aberration_fan` | Entrance pupil aberration fan | *none* |
